@@ -26,7 +26,7 @@ def main():
     train(config['Train'], train_loader, memory_table)
 
 def loss_fn(outputs, targets, memory_tb, t=0.1, ld=0.9):
-    prob = -ld * memory_tb.probability(outputs, targets, t)
+    prob = -ld * torch.log(memory_tb.probability(outputs, targets, t))
     reliables = torch.LongTensor(memory_tb.reliables[targets]).T.tolist()
     reliables_prob = torch.stack(list(map(lambda r: memory_tb.probability(outputs, r, t), reliables))).T
     reliables_prob = -((1 - ld) / len(reliables)) * torch.log(reliables_prob).sum(dim=1)
